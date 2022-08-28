@@ -10,7 +10,7 @@
         </p>
         <button class="card-header-icon" aria-label="more options">
             <span class="student-status-{{$student->id}} tag has-text-white {{$student->status?'has-background-success':'has-background-danger'}}">
-                {{$student->status?'Active':'In active'}}
+                {{$student->status?'Active':'Inactive'}}
             </span>
         </button>
     </header>
@@ -37,7 +37,7 @@
     <footer class="card-footer">
         <a href="{{route('students.show',$student->id)}}" class="card-footer-item has-background-info has-text-white">View</a>
         <a href="{{route('students.edit',$student->id)}}" class="card-footer-item has-background-info-light has-text-dark">Edit</a>
-        <a data-id="{{$student->id}}" class=" disable-student card-footer-item has-background-danger-light has-text-dark">Mark as inactive</a>
+        <a data-id="{{$student->id}}" class="student-status-change-{{$student->id}} disable-student card-footer-item has-background-danger-light has-text-dark">Mark as Inactive</a>
         <a data-id="{{$student->id}}" class=" delete-student card-footer-item has-background-danger has-text-white">Delete</a>
     </footer>
     <form id="deleteform{{$student->id}}" action="{{route('students.destroy',$student->id)}}" method="post">
@@ -64,13 +64,21 @@
                 '_token': "{{csrf_token()}}",
             },
             success: (result) => {
-                let text = result.status ? 'Active' : 'In active';
+                let text = result.status ? 'Active' : 'Inactive';
                 let color = result.status ? 'has-background-success' : 'has-background-danger';
+                let colorbtn = result.status ? 'has-background-danger-light':'has-background-success-light';
+                let textbtn = result.status ?'Inactive':'Active';
                 $(".student-status-" + id)
                     .html(text)
                     .removeClass('has-background-success')
                     .removeClass('has-background-danger')
                     .addClass(color)
+
+                $(".student-status-change-" + id)
+                    .html('Mark as '+textbtn)
+                    .removeClass('has-background-success-light')
+                    .removeClass('has-background-danger-light')
+                    .addClass(colorbtn)
             },
             error: (error) => {
                 console.error(error);

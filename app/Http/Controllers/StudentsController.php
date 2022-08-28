@@ -61,7 +61,7 @@ class StudentsController extends Controller
         if ($request->english) {
             $marks[] = [
                 'subject_id' => $subject->where('code', 'english')->value('id'),
-                'marks' => $request->english??0,
+                'marks' => $request->english ?? 0,
                 'student_id' => $student->id
             ];
         }
@@ -70,7 +70,7 @@ class StudentsController extends Controller
 
             $marks[] = [
                 'subject_id' => $subject->where('code', 'maths')->value('id'),
-                'marks' => $request->maths??0,
+                'marks' => $request->maths ?? 0,
                 'student_id' => $student->id
             ];
         }
@@ -79,7 +79,7 @@ class StudentsController extends Controller
 
             $marks[] = [
                 'subject_id' => $subject->where('code', 'history')->value('id'),
-                'marks' => $request->history??0,
+                'marks' => $request->history ?? 0,
                 'student_id' => $student->id
             ];
         }
@@ -146,27 +146,33 @@ class StudentsController extends Controller
         $subject = Subject::all();
         $marks = [];
         if ($request->english) {
+            $subjectId = $subject->where('code', 'english')->value('id');
             $marks[] = [
-                'subject_id' => $subject->where('code', 'english')->value('id'),
-                'marks' => $request->english??0,
+                'id' => $student->marks()->where('subject_id', $subjectId)->where('student_id', $student->id)->value('id'),
+                'subject_id' => $subjectId,
+                'marks' => $request->english ?? 0,
                 'student_id' => $student->id
             ];
         }
 
         if ($request->maths) {
 
+            $subjectId = $subject->where('code', 'maths')->value('id');
             $marks[] = [
+                'id' => $student->marks()->where('subject_id', $subjectId)->where('student_id', $student->id)->value('id'),
                 'subject_id' => $subject->where('code', 'maths')->value('id'),
-                'marks' => $request->maths??0,
+                'marks' => $request->maths ?? 0,
                 'student_id' => $student->id
             ];
         }
 
         if ($request->history) {
 
+            $subjectId = $subject->where('code', 'history')->value('id');
             $marks[] = [
+                'id' => $student->marks()->where('subject_id', $subjectId)->where('student_id', $student->id)->value('id'),
                 'subject_id' => $subject->where('code', 'history')->value('id'),
-                'marks' => $request->history??0,
+                'marks' => $request->history ?? 0,
                 'student_id' => $student->id
             ];
         }
@@ -186,12 +192,11 @@ class StudentsController extends Controller
     {
         $student->delete();
         return redirect(route('students.index'));
-
     }
 
     public function changeStatus(Request $request)
     {
-        $student=Student::find($request->id);
+        $student = Student::find($request->id);
         $student->toggleStatus()->save();
 
         return $student;
@@ -199,10 +204,10 @@ class StudentsController extends Controller
 
     private function updateMarks($studentMarks)
     {
-        // dd($studentMarks);
         $marks = Mark::upsert(
             $studentMarks,
-            ['student_id', 'subject_id'],['marks']
+            ['id', 'student_id', 'subject_id'],
+            ['marks']
         );
 
         return $marks;

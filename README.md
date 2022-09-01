@@ -1,5 +1,5 @@
 # Student management system
-A task to maintain git issues in two way sync using Laravel
+A system to maintain your students data using Laravel
 
 ## Prerequisites
 - Composer

@@ -1,4 +1,4 @@
-# Github-issue-tracker
+# Student management system
 A task to maintain git issues in two way sync using Laravel
 
 ## Prerequisites
